@@ -1,7 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 
+const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/stuff');
+
+
+//Connexion à la BDD MongoDB
 mongoose.connect('mongodb+srv://Anthony:renard14@projet6.jtfwl.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -9,8 +15,9 @@ mongoose.connect('mongodb+srv://Anthony:renard14@projet6.jtfwl.gcp.mongodb.net/<
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-const app = express();
+const app = express(); //Variable d'utilisation d'Express
 
+//Autorisation à tout le monde d'avoir accès à la BDD et de mettre en place le CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -18,34 +25,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
+//NE RIEN MODIFIER AU DESSUS
 
-app.post('/api/stuff', (req, res, next) => {
-    console.log(req.body);
-    res.status(201).json({
-        message: 'Objet crée !'
-    });
-});
+app.use(bodyParser.json()); //Permet de transformer les requêtes en JSON
 
-app.use('/api/stuff', (req, res, next) => {
-    const stuff = [{
-            _id: 'oeihfzeoi',
-            title: 'Mon premier objet',
-            description: 'Les infos de mon premier objet',
-            imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-            price: 4900,
-            userId: 'qsomihvqios',
-        },
-        {
-            _id: 'oeihfzeomoihi',
-            title: 'Mon deuxième objet',
-            description: 'Les infos de mon deuxième objet',
-            imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-            price: 2900,
-            userId: 'qsomihvqios',
-        },
-    ];
-    res.status(200).json(stuff);
-});
+app.use('/api/auth', userRoutes);
+app.use('/api/sauces', sauceRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
