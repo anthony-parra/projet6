@@ -10,14 +10,14 @@ Lancer le serveur avec 'ng serve'.
 Dossier backend :
 
 - npm init avec un entrypoint server.js
-- npm install -g nodemon
-- npm install --save express
-- npm install --save mongoose
-- npm install --save mongoose-unique-validator
-- npm install --save bcrypt
-- npm install --save body-parser
-- npm install --save jsonwebtoken
-- npm install --save multer
+- npm install -g nodemon (Permet de redémarrer le serveur à chaque sauvegarde automatiquement).
+- npm install --save express (Express est un framework pour construire des applications web basées sur Node.js).
+- npm install --save mongoose (Mongoose est une bibliothèque JavaScript).
+- npm install --save mongoose-unique-validator (Permet d'enregistrer dans la BDD qu'une seule fois la même adresse mail).
+- npm install --save bcrypt (Permet de hasher les informations clients).
+- npm install --save body-parser (body-parser est un middleware express qui stocke en tant qu'object javascript).
+- npm install --save jsonwebtoken (Il permet l'échange sécurisé de jetons (tokens) entre plusieurs parties).
+- npm install --save multer (Permet de gérer les fichiers entrants dans les requêtes HTTP).
 
 Lancer 'nodemon server' pour executer le serveur.
 
