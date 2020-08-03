@@ -50,47 +50,48 @@ exports.getAllSauce = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 exports.likeOneSauce = (req, res, next) => {
+    let updatedSauce;
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             switch (req.body.like) {
                 case -1:
                     sauce.dislikes = sauce.dislikes + 1;
-                    sauce.userDisliked.push(req.body.userId);
-                    Sauce = {
+                    sauce.usersDisliked.push(req.body.userId);
+                    updatedSauce = {
                         "dislikes": sauce.dislikes,
-                        "userDisliked": sauce.userDisliked
+                        "usersDisliked": sauce.usersDisliked
                     }
                     break;
                 case 0:
-                    if (sauce.userDisliked.find(user => user === req.body.userId)) {
-                        sauce.userDisliked = sauce.userDisliked.filter(user => user !== req.body.userId);
+                    if (sauce.usersDisliked.find(user => user === req.body.userId)) {
+                        sauce.usersDisliked = sauce.usersDisliked.filter(user => user !== req.body.userId);
                         sauce.dislikes = sauce.dislikes - 1;
-                        Sauce = {
+                        updatedSauce = {
                             "dislikes": sauce.dislikes,
-                            "userDisliked": sauce.userDisliked
+                            "usersDisliked": sauce.usersDisliked
                         }
                     } else {
-                        sauce.userLiked = sauce.userLiked.filter(user => user !== req.body.userId);
+                        sauce.usersLiked = sauce.usersLiked.filter(user => user !== req.body.userId);
                         sauce.likes = sauce.likes - 1;
-                        Sauce = {
+                        updatedSauce = {
                             "likes": sauce.likes,
-                            "userLiked": sauce.userLiked
+                            "usersLiked": sauce.usersLiked
                         }
                     }
                     break;
                 case 1:
                     sauce.likes = sauce.likes + 1;
-                    sauce.userLiked.push(req.body.userId);
-                    Sauce = {
+                    sauce.usersLiked.push(req.body.userId);
+                    updatedSauce = {
                         "likes": sauce.likes,
-                        "userLiked": sauce.userLiked
+                        "usersLiked": sauce.usersLiked
                     }
                     break;
                 default:
                     return res.status(500).json({ error });
             }
 
-            Sauce.updateOne({ _id: req.params.id }, { set: Sauce })
+            Sauce.updateOne({ _id: req.params.id }, { $set: updatedSauce })
                 .then(() => res.status(200).json({ message: 'Sauce liké !' }))
                 .catch(error => res.status(400).json({ error }));
         })

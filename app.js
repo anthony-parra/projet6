@@ -5,10 +5,11 @@ const path = require('path');
 
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/stuff');
+const config = require('./config/config');
 
 
 //Connexion à la BDD MongoDB
-mongoose.connect('mongodb+srv://Anthony:renard14@projet6.jtfwl.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://' + config.user + ':' + config.password + '@' + config.db + '?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
