@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require("express-rate-limit");
 
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/stuff');
@@ -27,10 +29,17 @@ app.use((req, res, next) => {
     next();
 });
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // Limite à 100 requête !
+});
+
 //NE RIEN MODIFIER AU DESSUS
 
 app.use(bodyParser.json()); //Permet de transformer les requêtes en JSON
 
+app.use(limiter);
+app.use(xss());
 app.use(helmet());
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
